@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.cuberact</groupId>
+        <artifactId>cuberact-parent</artifactId>
+        <version>1.0.1</version>
+        <relativePath>../cuberact-parent/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>cuberact-swing-layout</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>Cuberact-Swing-Layout</name>
+    <description>Cuberact swing layout - base on EsotericSoftware/TableLayout</description>
+
+    <url>https://github.com/cuberact/cuberact-swing-layout</url>
+
+    <scm>
+        <connection>scm:git:https://github.com/cuberact/cuberact-swing-layout.git</connection>
+        <developerConnection>scm:git:git@github.com:cuberact/cuberact-swing-layout.git</developerConnection>
+        <url>https://github.com/cuberact/cuberact-swing-layout</url>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/cuberact/cuberact-swing-layout/issues</url>
+    </issueManagement>
+
+</project>
