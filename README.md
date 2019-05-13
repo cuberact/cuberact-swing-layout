@@ -20,6 +20,7 @@ composite.addCell(new JButton("enter")).padTop(10).align(Cell.RIGHT).colspan(2).
     // save credentials
 });
 ```
+![](https://raw.githubusercontent.com/cuberact/cuberactorg.github.io/master/images/cuberact-swing-layout/credentials-layout-showcase.png)
 
 ## Configuration
 
