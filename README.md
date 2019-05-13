@@ -1,7 +1,41 @@
+![](https://raw.githubusercontent.com/cuberact/cuberactorg.github.io/master/cuberact_128x128.png) 
+
 # cuberact-swing-layout
-Swing Table Layout (Composite). Based on [EsotericSoftware/TableLayout](https://github.com/EsotericSoftware/tablelayout) . Added new features and improved for Swing.
 
+Swing panel with table layout (Composite). Based on [EsotericSoftware/TableLayout](https://github.com/EsotericSoftware/tablelayout) .
 
+* possibility of different number of components in individual rows
+* aligning components within cells (align)
+* indentation inside cells (padding, spacing)
+* complex cell sizing (min, pref, max)
+* joining columns (col span)
+* joining rows must be solved through embedded composite (matroska)
+
+The original idea of TableLayout is excellent. In a small space, you can describe a very complex layout. It is still very human readable and even very clear.
+Whole client code is pure java (refactor friendly). No constraint description in strings. 
+ 
+## Changes against the original
+
+* Cell is generic by widget/component (better chaining)
+* Composite border working correctly 
+* Composite background painting (optionally)
+* some optimizations (speed, instances count)
+* API cleaned. The original project is multi-use (Swing, JavaFX, libGdx). This layout is for Swing only. This allows me to fine-tune the API more.
+* added possibility remove single widget from Composite without remove all and add all composite children again
+* no other dependencies on other libraries
+* targeted to the smallest code as possible
+* debug option (draw debug rectangles) is removed
+
+#### Class names
+
+The name "Table" is used in Swing, so the client code is often confusing. That's why I chose another name.
+
+| cuberact-swing-layout | EsotericSoftware/TableLayout |
+| --------------------- | ---------------------------- |
+| Composite             | Table                        |
+| CompositeLayout       | TableLayout                  |
+| Cell                  | Cell                         |
+| Stack                 | Stack                        |
 
 ## Example
 
@@ -24,30 +58,29 @@ composite.addCell(new JButton("enter")).padTop(10).align(Cell.RIGHT).colspan(2).
 
 ## Configuration
 
-##### Maven
+[Maven central repo](https://search.maven.org/artifact/org.cuberact/cuberact-swing-layout)
 
-```xml
-<dependency>
-  <groupId>org.cuberact</groupId>
-  <artifactId>cuberact-swing-layout</artifactId>
-  <version>1.0.0</version>
-</dependency>
+## License
+
+__cuberact-swing-layout__ is released under the [Apache 2.0 license](LICENSE).
+
+```
+Copyright 2019 Michal Nikodim <michal.nikodim@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ```
 
-##### Gradle
-
-```groovy
-compile 'org.cuberact:cuberact-swing-layout:1.0.0'
-```
-
-##### Ivy
-
-```xml
-<dependency org="org.cuberact" name="cuberact-swing-layout" rev="1.5.0">
-  <artifact name="cuberact-json" type="jar" />
-</dependency>
-```
-## Original licence 
+## Original licence from EsotericSoftware/TableLayout
 
 
   Copyright (c) 2011, Nathan Sweet <nathan.sweet@gmail.com>
