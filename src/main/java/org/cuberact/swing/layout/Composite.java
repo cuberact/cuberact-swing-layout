@@ -28,6 +28,7 @@
 package org.cuberact.swing.layout;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.util.Collections;
 import java.util.Iterator;
@@ -49,6 +50,23 @@ import static org.cuberact.swing.layout.Cell.CENTER;
 public class Composite extends JComponent implements Iterable<Cell<? extends Component>> {
 
     private CompositeLayout layout;
+
+    public Composite() {
+        //empty constructor
+    }
+
+    public Composite(Color background) {
+        setBackground(background);
+    }
+
+    public Composite(Border border) {
+        setBorder(border);
+    }
+
+    public Composite(Border border, Color background) {
+        setBorder(border);
+        setBackground(background);
+    }
 
     public Cell<JLabel> addCell(String text) {
         return addCell(new JLabel(text));
