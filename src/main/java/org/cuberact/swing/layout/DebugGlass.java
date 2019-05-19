@@ -64,7 +64,6 @@ public class DebugGlass extends JComponent implements AWTEventListener {
                             target = new WeakReference<>(t.getParent());
                             repaint();
                         }
-                        keyEvent.consume();
                     } else if (keyEvent.getKeyCode() == KEY_REVERT_PARENT) {
                         Component child = getChildUnderMouse(mouse);
                         if (child != target.get()) {
@@ -74,7 +73,6 @@ public class DebugGlass extends JComponent implements AWTEventListener {
                             target = new WeakReference<>(child);
                             repaint();
                         }
-                        keyEvent.consume();
                     } else if (keyEvent.getKeyCode() == KEY_UNSELECT) {
                         if (target.get() != null) {
                             target = new WeakReference<>(null);
