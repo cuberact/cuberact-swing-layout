@@ -29,6 +29,7 @@ package org.cuberact.swing.layout;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.Rectangle;
 
 /**
@@ -472,6 +473,10 @@ public class Cell<T extends Component> {
 
     public Rectangle getWidgetRect() {
         return new Rectangle(widgetX, widgetY, widgetWidth, widgetHeight);
+    }
+
+    public Insets getComputedPad() {
+        return new Insets(computedPadTop, computedPadLeft, computedPadBottom, computedPadRight);
     }
 
     public int getColumn() {
