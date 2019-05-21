@@ -174,7 +174,15 @@ public class Composite extends JComponent implements Iterable<Cell<? extends Com
     }
 
     public Insets getPad() {
-        return layout != null ? new Insets(layout.getPadTop(), layout.getPadLeft(), layout.getPadBottom(), layout.getPadRight()) : new Insets(0, 0, 0, 0);
+        return layout != null ? layout.getPad() : new Insets(0, 0, 0, 0);
+    }
+
+    public int getColumns() {
+        return layout != null ? layout.getColumns() : 0;
+    }
+
+    public int getRows() {
+        return layout != null ? layout.getRows() : 0;
     }
 
     @Override

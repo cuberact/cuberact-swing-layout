@@ -184,24 +184,20 @@ class CompositeLayout {
         }
     }
 
-    int getPadTop() {
-        return padTop;
-    }
-
-    int getPadLeft() {
-        return padLeft;
-    }
-
-    int getPadBottom() {
-        return padBottom;
-    }
-
-    int getPadRight() {
-        return padRight;
+    Insets getPad() {
+        return new Insets(padTop, padLeft, padBottom, padRight);
     }
 
     int getAlign() {
         return align;
+    }
+
+    int getColumns() {
+        return columns;
+    }
+
+    int getRows() {
+        return rows;
     }
 
     int[] ensureSize(int[] array, int size) {
@@ -409,8 +405,8 @@ class CompositeLayout {
             tablePrefHeight += max(rowMinHeight[i], rowPrefHeight[i]);
         }
 
-        int hPadding = getPadLeft() + getPadRight() + borderInsets.left + borderInsets.right;
-        int vPadding = getPadTop() + getPadBottom() + borderInsets.top + borderInsets.bottom;
+        int hPadding = padLeft + padRight + borderInsets.left + borderInsets.right;
+        int vPadding = padTop + padBottom + borderInsets.top + borderInsets.bottom;
         tableMinWidth = tableMinWidth + hPadding;
         tableMinHeight = tableMinHeight + vPadding;
         tablePrefWidth = max(tablePrefWidth + hPadding, tableMinWidth);
@@ -426,8 +422,8 @@ class CompositeLayout {
             fillCellSizesCache();
         }
         Insets borderInsets = composite.getInsets();
-        int hPadding = getPadLeft() + getPadRight() + borderInsets.left + borderInsets.right;
-        int vPadding = getPadTop() + getPadBottom() + borderInsets.top + borderInsets.bottom;
+        int hPadding = padLeft + padRight + borderInsets.left + borderInsets.right;
+        int vPadding = padTop + padBottom + borderInsets.top + borderInsets.bottom;
         int totalExpandWidth = 0, totalExpandHeight = 0;
         for (int i = 0; i < columns; i++) {
             totalExpandWidth += expandWidth[i] ? 1 : 0;
@@ -534,13 +530,13 @@ class CompositeLayout {
             tableHeight += rowHeight[i];
         }
         // Position composite within the container.
-        int x = getPadLeft() + borderInsets.left;
+        int x = padLeft + borderInsets.left;
         if ((align & RIGHT) != 0) {
             x += composite.getWidth() - tableWidth;
         } else if ((align & LEFT) == 0) { // Center
             x += (composite.getWidth() - tableWidth) / 2;
         }
-        int y = getPadTop() + borderInsets.top;
+        int y = padTop + borderInsets.top;
         if ((align & BOTTOM) != 0) {
             y += composite.getHeight() - tableHeight;
         } else if ((align & TOP) == 0) { // Center
