@@ -27,7 +27,9 @@
 
 package org.cuberact.swing.layout;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Rectangle;
 
 /**
  * Cell
@@ -59,8 +61,7 @@ public class Cell<T extends Component> {
     int align;
     int colspan;
     boolean uniformX, uniformY;
-    int widgetX, widgetY;
-    int widgetWidth, widgetHeight;
+    int widgetX, widgetY, widgetWidth, widgetHeight;
     int column, row;
     int cellAboveIndex = -1;
     int computedPadTop, computedPadLeft, computedPadBottom, computedPadRight;
@@ -467,5 +468,17 @@ public class Cell<T extends Component> {
 
     public boolean isRowEnd() {
         return rowEnd;
+    }
+
+    public Rectangle getWidgetRect() {
+        return new Rectangle(widgetX, widgetY, widgetWidth, widgetHeight);
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public int getRow() {
+        return row;
     }
 }
