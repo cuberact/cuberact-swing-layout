@@ -27,9 +27,16 @@
 
 package org.cuberact.swing.layout;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.border.Border;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.LayoutManager;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -217,29 +224,57 @@ public class Composite extends JComponent implements Iterable<Cell<? extends Com
         }
     }
 
+    /**
+     * Only for emergency purpose (swing drag, toolbar floating closed, etc).
+     * Use addCell instead
+     */
+    @Deprecated
     @Override
     public Component add(final Component comp, final int index) {
-        throw new UnsupportedOperationException("Composite - please use addCell methods");
+        addCell(comp);
+        return comp;
     }
 
+    /**
+     * Only for emergency purpose (swing drag, toolbar floating closed, etc).
+     * Use addCell instead
+     */
+    @Deprecated
     @Override
     public Component add(final Component comp) {
-        throw new UnsupportedOperationException("Composite - please use addCell methods");
+        addCell(comp);
+        return comp;
     }
 
+    /**
+     * Only for emergency purpose (swing drag, toolbar floating closed, etc).
+     * Use addCell instead
+     */
+    @Deprecated
     @Override
     public Component add(final String name, final Component comp) {
-        throw new UnsupportedOperationException("Composite - please use addCell methods");
+        addCell(comp);
+        return comp;
     }
 
+    /**
+     * Only for emergency purpose (swing drag, toolbar floating closed, etc).
+     * Use addCell instead
+     */
+    @Deprecated
     @Override
     public void add(final Component comp, final Object constraints) {
-        throw new UnsupportedOperationException("Composite - please use addCell methods");
+        addCell(comp);
     }
 
+    /**
+     * Only for emergency purpose (swing drag, toolbar floating closed, etc).
+     * Use addCell instead
+     */
+    @Deprecated
     @Override
     public void add(final Component comp, final Object constraints, final int index) {
-        throw new UnsupportedOperationException("Composite - please use addCell methods");
+        addCell(comp);
     }
 
     @Override
