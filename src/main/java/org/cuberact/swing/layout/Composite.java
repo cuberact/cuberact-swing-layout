@@ -36,6 +36,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.util.Collections;
 import java.util.Iterator;
@@ -172,20 +173,8 @@ public class Composite extends JComponent implements Iterable<Cell<? extends Com
         return layout != null ? layout.getAlign() : CENTER;
     }
 
-    public int getPadTop() {
-        return layout != null ? layout.getPadTop() : 0;
-    }
-
-    public int getPadLeft() {
-        return layout != null ? layout.getPadLeft() : 0;
-    }
-
-    public int getPadBottom() {
-        return layout != null ? layout.getPadBottom() : 0;
-    }
-
-    public int getPadRight() {
-        return layout != null ? layout.getPadRight() : 0;
+    public Insets getPad() {
+        return layout != null ? new Insets(layout.getPadTop(), layout.getPadLeft(), layout.getPadBottom(), layout.getPadRight()) : new Insets(0, 0, 0, 0);
     }
 
     @Override

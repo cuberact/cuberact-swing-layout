@@ -403,36 +403,12 @@ public class Cell<T extends Component> {
         public final Dimension max = new Dimension();
     }
 
-    public int getSpaceTop() {
-        return spaceTop;
+    public Insets getSpace() {
+        return new Insets(spaceTop, spaceLeft, spaceBottom, spaceRight);
     }
 
-    public int getSpaceLeft() {
-        return spaceLeft;
-    }
-
-    public int getSpaceBottom() {
-        return spaceBottom;
-    }
-
-    public int getSpaceRight() {
-        return spaceRight;
-    }
-
-    public int getPadTop() {
-        return padTop;
-    }
-
-    public int getPadLeft() {
-        return padLeft;
-    }
-
-    public int getPadBottom() {
-        return padBottom;
-    }
-
-    public int getPadRight() {
-        return padRight;
+    public Insets getPad() {
+        return new Insets(padTop, padLeft, padBottom, padRight);
     }
 
     public boolean isFillX() {
