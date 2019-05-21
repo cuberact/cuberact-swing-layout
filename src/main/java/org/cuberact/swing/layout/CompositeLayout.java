@@ -29,9 +29,9 @@ package org.cuberact.swing.layout;
 
 import org.cuberact.swing.layout.Cell.Size;
 
-import javax.swing.border.AbstractBorder;
-import javax.swing.border.Border;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +58,6 @@ class CompositeLayout {
     private final Composite composite;
     private final Cell compositeDefaults = new Cell();
     private final List<Cell<? extends Component>> cells = new ArrayList<>();
-    private final Insets borderInsets = new Insets(0, 0, 0, 0);
     private Cell rowDefaults;
     private Map<Cell, Size> cellSizesShortTimeCache = new HashMap<>();
     private int columns, rows;
@@ -289,9 +288,9 @@ class CompositeLayout {
 
     @SuppressWarnings("Duplicates")
     private void computeSize(boolean flushCellSizesCacheAfter) {
-        updateBorderInsets();
         updateCells();
         fillCellSizesCache();
+        Insets borderInsets = composite.getInsets();
         sizeInvalid = false;
         columnMinWidth = ensureSize(columnMinWidth, columns);
         rowMinHeight = ensureSize(rowMinHeight, rows);
@@ -424,9 +423,9 @@ class CompositeLayout {
         if (sizeInvalid) {
             computeSize(false);
         } else {
-            updateBorderInsets();
             fillCellSizesCache();
         }
+        Insets borderInsets = composite.getInsets();
         int hPadding = getPadLeft() + getPadRight() + borderInsets.left + borderInsets.right;
         int vPadding = getPadTop() + getPadBottom() + borderInsets.top + borderInsets.bottom;
         int totalExpandWidth = 0, totalExpandHeight = 0;
@@ -601,23 +600,6 @@ class CompositeLayout {
         for (Cell cell : cells) {
             cellSizesShortTimeCache.put(cell, cell.getSize());
         }
-    }
-
-    private void updateBorderInsets() {
-        Border border = composite.getBorder();
-        if (border != null) {
-            if (border instanceof AbstractBorder) {
-                ((AbstractBorder) border).getBorderInsets(composite, borderInsets);
-                return;
-            } else {
-                Insets insets = border.getBorderInsets(composite);
-                if (insets != null) {
-                    borderInsets.set(insets.top, insets.left, insets.bottom, insets.right);
-                    return;
-                }
-            }
-        }
-        borderInsets.set(0, 0, 0, 0);
     }
 
     private static int max(int value1, int value2) {
