@@ -1,7 +1,16 @@
 package org.cuberact.swing.layout;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JComponent;
+import javax.swing.JRootPane;
+import javax.swing.RootPaneContainer;
+import javax.swing.SwingUtilities;
+import java.awt.AWTEvent;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -15,8 +24,9 @@ import java.util.Set;
 
 import static java.awt.AWTEvent.KEY_EVENT_MASK;
 import static java.awt.AWTEvent.MOUSE_MOTION_EVENT_MASK;
+import static java.awt.AWTEvent.WINDOW_EVENT_MASK;
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class DebugGlass extends JComponent implements AWTEventListener {
 
     public static Set<Integer> DEBUG_ACTIVATE_KEYS = new HashSet<>(Collections.singletonList(KeyEvent.VK_ALT));
@@ -26,8 +36,44 @@ public class DebugGlass extends JComponent implements AWTEventListener {
     public static Color WIDGET_COLOR = new Color(255, 0, 255, 100);
     public static Color CELL_COLOR = new Color(0, 255, 0, 255);
 
-    public static void apply(RootPaneContainer rootPaneContainer) {
-        new DebugGlass(rootPaneContainer);
+    private static DebugGlassPainter DEFAULT_PAINTER = (g, c, x, y, w, h) -> {
+        g.setColor(WIDGET_COLOR);
+        g.fillRect(x, y, w, h);
+        if (c instanceof Composite) {
+            g.setColor(CELL_COLOR);
+            final List<Cell<? extends Component>> cells = ((Composite) c).getCells();
+            for (Cell<? extends Component> cell : cells) {
+                g.drawRect(x + cell.widgetX, y + cell.widgetY, cell.widgetWidth - 1, cell.widgetHeight - 1);
+            }
+        }
+    };
+
+    private static AWTEventListener AUTOMATIC = event -> {
+        if (event instanceof WindowEvent && event.getID() == WindowEvent.WINDOW_OPENED) {
+            WindowEvent we = (WindowEvent) event;
+            Window window = we.getWindow();
+            if (window instanceof RootPaneContainer) {
+                apply((RootPaneContainer) window, DEFAULT_PAINTER);
+            }
+        }
+    };
+
+    public static void enableAutomatic() {
+        enableAutomatic(DEFAULT_PAINTER);
+    }
+
+    public static void enableAutomatic(DebugGlassPainter painter) {
+        DEFAULT_PAINTER = painter;
+        disableAutomatic();
+        Toolkit.getDefaultToolkit().addAWTEventListener(AUTOMATIC, WINDOW_EVENT_MASK);
+    }
+
+    public static void disableAutomatic() {
+        Toolkit.getDefaultToolkit().removeAWTEventListener(AUTOMATIC);
+    }
+
+    public static DebugGlass apply(RootPaneContainer rootPaneContainer, DebugGlassPainter painter) {
+        return new DebugGlass(rootPaneContainer, painter);
     }
 
     private final Set<Integer> pressedKeys = new HashSet<>();
@@ -35,10 +81,12 @@ public class DebugGlass extends JComponent implements AWTEventListener {
     private Point mouse = new Point(0, 0);
     private WeakReference<Component> target = new WeakReference<>(null);
     private boolean debugIsActive = false;
+    private final DebugGlassPainter painter;
 
-    private DebugGlass(RootPaneContainer rootPaneContainer) {
+    private DebugGlass(RootPaneContainer rootPaneContainer, DebugGlassPainter painter) {
         this.rootPane = rootPaneContainer.getRootPane();
         this.rootPane.setGlassPane(this);
+        this.painter = painter;
         setOpaque(false);
         setVisible(true);
         Toolkit.getDefaultToolkit().addAWTEventListener(this, MOUSE_MOTION_EVENT_MASK | KEY_EVENT_MASK);
@@ -91,20 +139,16 @@ public class DebugGlass extends JComponent implements AWTEventListener {
         }
     }
 
+    public boolean contains(int x, int y) {
+        return false;
+    }
+
     @Override
     protected void paintComponent(final Graphics g) {
-        Component t = target.get();
-        if (t != null && t.isShowing()) {
-            g.setColor(WIDGET_COLOR);
-            Point p = transformLocation(t.getLocationOnScreen());
-            g.fillRect(p.x, p.y, t.getWidth(), t.getHeight());
-            if (t instanceof Composite) {
-                g.setColor(CELL_COLOR);
-                final List<Cell<? extends Component>> cells = ((Composite) t).getCells();
-                for (Cell<? extends Component> cell : cells) {
-                    g.drawRect(p.x + cell.widgetX, p.y + cell.widgetY, cell.widgetWidth - 1, cell.widgetHeight - 1);
-                }
-            }
+        Component c = target.get();
+        if (painter != null && c != null && c.isShowing()) {
+            Point p = transformLocation(c.getLocationOnScreen());
+            painter.paint(g, c, p.x, p.y, c.getWidth(), c.getHeight());
         }
     }
 
@@ -129,6 +173,10 @@ public class DebugGlass extends JComponent implements AWTEventListener {
     private Point transformLocation(Point screenCoords) {
         final Point glassP = this.getLocationOnScreen();
         return new Point(screenCoords.x - glassP.x, screenCoords.y - glassP.y);
+    }
+
+    public interface DebugGlassPainter {
+        void paint(Graphics g, Component c, int x, int y, int width, int height);
     }
 
 }
