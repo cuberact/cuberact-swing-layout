@@ -36,14 +36,15 @@ public class DebugGlass extends JComponent implements AWTEventListener {
     public static Color WIDGET_COLOR = new Color(255, 0, 255, 100);
     public static Color CELL_COLOR = new Color(0, 255, 0, 255);
 
-    private static DebugGlassPainter DEFAULT_PAINTER = (g, c, x, y, w, h) -> {
+    private static DebugGlassPainter DEFAULT_PAINTER = (g, c, locationConverter) -> {
+        Point p = locationConverter.convert(c);
         g.setColor(WIDGET_COLOR);
-        g.fillRect(x, y, w, h);
+        g.fillRect(p.x, p.y, c.getWidth(), c.getHeight());
         if (c instanceof Composite) {
             g.setColor(CELL_COLOR);
             final List<Cell<? extends Component>> cells = ((Composite) c).getCells();
             for (Cell<? extends Component> cell : cells) {
-                g.drawRect(x + cell.widgetX, y + cell.widgetY, cell.widgetWidth - 1, cell.widgetHeight - 1);
+                g.drawRect(p.x + cell.widgetX, p.y + cell.widgetY, cell.widgetWidth - 1, cell.widgetHeight - 1);
             }
         }
     };
@@ -53,7 +54,9 @@ public class DebugGlass extends JComponent implements AWTEventListener {
             WindowEvent we = (WindowEvent) event;
             Window window = we.getWindow();
             if (window instanceof RootPaneContainer) {
-                apply((RootPaneContainer) window, DEFAULT_PAINTER);
+                if (!(((RootPaneContainer) window).getRootPane().getGlassPane() instanceof DebugGlass)) {
+                    apply((RootPaneContainer) window);
+                }
             }
         }
     };
@@ -72,6 +75,10 @@ public class DebugGlass extends JComponent implements AWTEventListener {
         Toolkit.getDefaultToolkit().removeAWTEventListener(AUTOMATIC);
     }
 
+    public static DebugGlass apply(RootPaneContainer rootPaneContainer) {
+        return apply(rootPaneContainer, DEFAULT_PAINTER);
+    }
+
     public static DebugGlass apply(RootPaneContainer rootPaneContainer, DebugGlassPainter painter) {
         return new DebugGlass(rootPaneContainer, painter);
     }
@@ -85,6 +92,10 @@ public class DebugGlass extends JComponent implements AWTEventListener {
 
     private DebugGlass(RootPaneContainer rootPaneContainer, DebugGlassPainter painter) {
         this.rootPane = rootPaneContainer.getRootPane();
+        final Component oldGlassPane = this.rootPane.getGlassPane();
+        if (oldGlassPane instanceof DebugGlass) {
+            Toolkit.getDefaultToolkit().removeAWTEventListener((AWTEventListener) oldGlassPane);
+        }
         this.rootPane.setGlassPane(this);
         this.painter = painter;
         setOpaque(false);
@@ -147,8 +158,7 @@ public class DebugGlass extends JComponent implements AWTEventListener {
     protected void paintComponent(final Graphics g) {
         Component c = target.get();
         if (painter != null && c != null && c.isShowing()) {
-            Point p = transformLocation(c.getLocationOnScreen());
-            painter.paint(g, c, p.x, p.y, c.getWidth(), c.getHeight());
+            painter.paint(g, c, new LocationConverter());
         }
     }
 
@@ -175,8 +185,14 @@ public class DebugGlass extends JComponent implements AWTEventListener {
         return new Point(screenCoords.x - glassP.x, screenCoords.y - glassP.y);
     }
 
+    public class LocationConverter {
+        public Point convert(Component c) {
+            return transformLocation(c.getLocationOnScreen());
+        }
+    }
+
     public interface DebugGlassPainter {
-        void paint(Graphics g, Component c, int x, int y, int width, int height);
+        void paint(Graphics g, Component c, LocationConverter locationConverter);
     }
 
 }
