@@ -27,7 +27,12 @@
 
 package org.cuberact.swing.layout;
 
+import static org.cuberact.swing.layout.Cell.BOTTOM;
+import static org.cuberact.swing.layout.Cell.CENTER;
+import static org.cuberact.swing.layout.Cell.LEFT;
+import static org.cuberact.swing.layout.Cell.RIGHT;
 import org.cuberact.swing.layout.Cell.Size;
+import static org.cuberact.swing.layout.Cell.TOP;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -36,12 +41,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.cuberact.swing.layout.Cell.BOTTOM;
-import static org.cuberact.swing.layout.Cell.CENTER;
-import static org.cuberact.swing.layout.Cell.LEFT;
-import static org.cuberact.swing.layout.Cell.RIGHT;
-import static org.cuberact.swing.layout.Cell.TOP;
 
 /**
  * CompositeLayout
@@ -219,9 +218,11 @@ class CompositeLayout {
     void layout() {
         computeLayout();
         for (Cell cell : cells) {
-            Component component = cell.getWidget();
-            component.setLocation(cell.widgetX, cell.widgetY);
-            component.setSize(cell.widgetWidth, cell.widgetHeight);
+            if (cell.hasWidget()) {
+                Component component = cell.getWidget();
+                component.setLocation(cell.widgetX, cell.widgetY);
+                component.setSize(cell.widgetWidth, cell.widgetHeight);
+            }
         }
     }
 
